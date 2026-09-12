@@ -1,3 +1,5 @@
+import { calcularTotalProdutos } from '../data/produtos'
+
 function formatarMoeda(valor) {
   return valor.toLocaleString('pt-BR', {
     style: 'currency',
@@ -11,10 +13,7 @@ function ResumoCompra({ produtos }) {
     0
   )
 
-  const total = produtos.reduce(
-    (soma, produto) => soma + produto.preco * produto.quantidade,
-    0
-  )
+  const total = calcularTotalProdutos(produtos)
 
   return (
     <aside className="summary-card" aria-label="Resumo da compra">
