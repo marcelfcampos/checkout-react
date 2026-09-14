@@ -1,36 +1,37 @@
-import { useNavigate, Link } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { produtos } from '../data/produtos'
-import ResumoCompra from '../components/ResumoCompra'
-import { usePagamento } from '../hooks/usePagamento'
+import { useNavigate, Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { produtos } from "../data/produtos";
+import ResumoCompra from "../components/ResumoCompra";
+import { usePagamento } from "../hooks/usePagamento";
+
+import logo from "../assets/img/logo.svg";
 
 const schema = z.object({
-  titular: z
-    .string()
-    .trim()
-    .min(1, 'Informe o nome do titular.'),
+  titular: z.string().trim().min(1, "Informe o nome do titular."),
 
   cartao: z
     .string()
     .refine(
-      (valor) => valor.replace(/\D/g, '').length === 16,
-      'Informe um cartão com 16 dígitos.'
+      (valor) => valor.replace(/\D/g, "").length === 16,
+      "Informe um cartão com 16 dígitos.",
     ),
 
   validade: z
     .string()
-    .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, 'Use o formato MM/AA e um mês entre 01 e 12.'),
+    .regex(
+      /^(0[1-9]|1[0-2])\/\d{2}$/,
+      "Use o formato MM/AA e um mês entre 01 e 12.",
+    ),
 
-  cvv: z
-    .string()
-    .regex(/^\d{3}$/, 'O CVV deve conter 3 dígitos.'),
-})
+  cvv: z.string().regex(/^\d{3}$/, "O CVV deve conter 3 dígitos."),
+});
 
 function Pagamento() {
-  const navigate = useNavigate()
-  const { processando, processarCompra } = usePagamento()
+  const navigate = useNavigate();
+  const { processando, processarCompra } = usePagamento();
 
   const {
     register,
@@ -39,23 +40,27 @@ function Pagamento() {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      titular: '',
-      cartao: '',
-      validade: '',
-      cvv: '',
+      titular: "",
+      cartao: "",
+      validade: "",
+      cvv: "",
     },
-  })
+  });
 
   async function onSubmit(dados) {
-    const aprovado = await processarCompra(dados.cartao)
+    const aprovado = await processarCompra(dados.cartao);
 
-    navigate(aprovado ? '/sucesso' : '/falha', { replace: true })
+    navigate(aprovado ? "/sucesso" : "/falha", {
+      replace: true,
+    });
   }
 
   return (
     <main className="page">
       <div className="container">
         <header className="header">
+          <img className="logo" src={logo} alt="Checkout React" />
+
           <div>
             <p className="eyebrow">PAGAMENTO</p>
             <h1>Finalizar compra</h1>
@@ -66,18 +71,24 @@ function Pagamento() {
         </header>
 
         <section className="checkout-layout">
-          <form className="payment-card" onSubmit={handleSubmit(onSubmit)} noValidate>
+          <form
+            className="payment-card"
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+          >
             <div className="form-group">
               <label htmlFor="titular">Nome do titular</label>
+
               <input
                 id="titular"
                 type="text"
                 autoComplete="cc-name"
-                placeholder="Ex.: Marcel Ferreira"
+                placeholder="Ex.: Marcel Ferreira Campos"
                 aria-invalid={Boolean(errors.titular)}
-                aria-describedby={errors.titular ? 'titular-error' : undefined}
-                {...register('titular')}
+                aria-describedby={errors.titular ? "titular-error" : undefined}
+                {...register("titular")}
               />
+
               {errors.titular && (
                 <p className="field-error" id="titular-error">
                   {errors.titular.message}
@@ -87,6 +98,7 @@ function Pagamento() {
 
             <div className="form-group">
               <label htmlFor="cartao">Número do cartão</label>
+
               <input
                 id="cartao"
                 type="text"
@@ -95,9 +107,10 @@ function Pagamento() {
                 placeholder="0000 0000 0000 0000"
                 maxLength={19}
                 aria-invalid={Boolean(errors.cartao)}
-                aria-describedby={errors.cartao ? 'cartao-error' : undefined}
-                {...register('cartao')}
+                aria-describedby={errors.cartao ? "cartao-error" : undefined}
+                {...register("cartao")}
               />
+
               {errors.cartao && (
                 <p className="field-error" id="cartao-error">
                   {errors.cartao.message}
@@ -108,6 +121,7 @@ function Pagamento() {
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="validade">Validade</label>
+
                 <input
                   id="validade"
                   type="text"
@@ -116,9 +130,12 @@ function Pagamento() {
                   maxLength={5}
                   autoComplete="cc-exp"
                   aria-invalid={Boolean(errors.validade)}
-                  aria-describedby={errors.validade ? 'validade-error' : undefined}
-                  {...register('validade')}
+                  aria-describedby={
+                    errors.validade ? "validade-error" : undefined
+                  }
+                  {...register("validade")}
                 />
+
                 {errors.validade && (
                   <p className="field-error" id="validade-error">
                     {errors.validade.message}
@@ -128,6 +145,7 @@ function Pagamento() {
 
               <div className="form-group">
                 <label htmlFor="cvv">CVV</label>
+
                 <input
                   id="cvv"
                   type="password"
@@ -136,9 +154,10 @@ function Pagamento() {
                   maxLength={3}
                   autoComplete="cc-csc"
                   aria-invalid={Boolean(errors.cvv)}
-                  aria-describedby={errors.cvv ? 'cvv-error' : undefined}
-                  {...register('cvv')}
+                  aria-describedby={errors.cvv ? "cvv-error" : undefined}
+                  {...register("cvv")}
                 />
+
                 {errors.cvv && (
                   <p className="field-error" id="cvv-error">
                     {errors.cvv.message}
@@ -158,7 +177,7 @@ function Pagamento() {
               type="submit"
               disabled={processando}
             >
-              {processando ? 'Processando...' : 'Confirmar pagamento'}
+              {processando ? "Processando..." : "Confirmar pagamento"}
             </button>
 
             {!processando && (
@@ -172,7 +191,7 @@ function Pagamento() {
         </section>
       </div>
     </main>
-  )
+  );
 }
 
-export default Pagamento
+export default Pagamento;

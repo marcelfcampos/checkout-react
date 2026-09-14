@@ -45,6 +45,13 @@ a {
   margin-bottom: 28px;
 }
 
+.logo {
+  display: block;
+  width: 200px;
+  height: 50px;
+  margin-bottom: 22px;
+}
+
 .eyebrow {
   margin: 0 0 8px;
   font-size: 0.78rem;

@@ -18,3 +18,10 @@ export const produtos = [
     quantidade: 1,
   },
 ]
+
+export function calcularTotalProdutos(listaProdutos) {
+  return listaProdutos.reduce(
+    (total, produto) => total + produto.preco * produto.quantidade,
+    0
+  )
+}
